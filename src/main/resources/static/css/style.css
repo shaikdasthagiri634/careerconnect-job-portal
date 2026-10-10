@@ -1,0 +1,425 @@
+/* =====================================================================
+   CareerConnect - custom styles on top of Bootstrap 5
+   ---------------------------------------------------------------------
+   HOW THIS FILE IS ORGANISED (read top to bottom):
+     1. Colours and gradients ("design tokens")   -> change the look here
+     2. Background images                         -> swap the photos here
+     3. Page parts: navbar, hero, cards, auth, footer ...
+     4. Animations
+   ===================================================================== */
+
+/* ---------- 1. Colours and gradients ---------- */
+:root {
+    --cc-navy: #0f1b33;
+    --cc-navy-2: #18284a;
+    --cc-accent: #0f9d8a;          /* teal  */
+    --cc-accent-dark: #0b7d6e;
+    --cc-blue: #2563eb;            /* blue  */
+    --cc-purple: #7c3aed;          /* purple */
+    --cc-amber: #f4a83a;           /* orange */
+    --cc-pink: #f43f5e;
+    --cc-bg: #f5f7fb;
+    --cc-border: #e3e8f0;
+    --cc-muted: #6b7690;
+
+    /* Gradients ("shades") used all over the site */
+    --cc-grad-main: linear-gradient(135deg, #0f9d8a 0%, #2563eb 100%);
+    --cc-grad-warm: linear-gradient(135deg, #f4a83a 0%, #f43f5e 100%);
+    --cc-grad-purple: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
+    --cc-grad-dark: linear-gradient(135deg, #0f1b33 0%, #18284a 55%, #1e3a6b 100%);
+    /* Dark see-through layer put on top of photos so white text stays readable */
+    --cc-photo-overlay: linear-gradient(120deg, rgba(10,20,45,.92) 0%, rgba(15,40,80,.80) 50%, rgba(15,157,138,.55) 100%);
+
+    --cc-shadow-sm: 0 4px 14px rgba(15,27,51,.06);
+    --cc-shadow-lg: 0 20px 45px rgba(15,27,51,.14);
+
+    --bs-body-font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --bs-primary: #0f9d8a;
+    --bs-primary-rgb: 15, 157, 138;
+    --bs-link-color: #0b7d6e;
+    --bs-link-hover-color: #075c51;
+}
+
+/* ---------- 2. Background images ----------
+   Each picture is listed twice:
+     - first your own file in  src/main/resources/static/images/
+     - then an online photo (used automatically if your file is missing)
+   To use your own picture, just save it with the same file name in the images folder. */
+:root {
+    --cc-img-hero:  url("../images/hero-bg.jpg"),  url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1920&q=70");
+    --cc-img-page:  url("../images/page-bg.jpg"),  url("https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1920&q=60");
+    --cc-img-auth:  url("../images/auth-bg.jpg"),  url("https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1920&q=70");
+    --cc-img-cta:   url("../images/cta-bg.jpg"),   url("https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1600&q=60");
+}
+
+/* ---------- 3. Base ---------- */
+body {
+    background: var(--cc-bg);
+    color: #1d2638;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+main { flex: 1 0 auto; }
+h1, h2, h3, h4, h5 { font-weight: 700; letter-spacing: -0.01em; }
+
+/* Text filled with a gradient */
+.text-gradient {
+    background: var(--cc-grad-warm);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* ---------- Navbar (frosted glass) ---------- */
+.site-nav {
+    background: rgba(15, 27, 51, .88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    transition: box-shadow .2s ease, background .2s ease;
+}
+.site-nav.scrolled { background: rgba(15, 27, 51, .97); box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+.site-nav .navbar-brand { font-weight: 800; font-size: 1.35rem; }
+.site-nav .navbar-brand span { color: var(--cc-accent); }
+.site-nav .navbar-brand i { color: var(--cc-amber); }
+.site-nav .nav-link { color: rgba(255,255,255,.78); font-weight: 500; position: relative; }
+.site-nav .nav-link:hover, .site-nav .nav-link.active { color: #fff; }
+.site-nav .nav-link::after {               /* gradient underline on hover */
+    content: ""; position: absolute; left: .5rem; right: .5rem; bottom: .2rem; height: 2px;
+    background: var(--cc-grad-main); border-radius: 2px;
+    transform: scaleX(0); transition: transform .2s ease;
+}
+.site-nav .nav-link:hover::after { transform: scaleX(1); }
+
+/* ---------- Buttons ---------- */
+.btn-accent {
+    background: var(--cc-grad-main);
+    background-size: 150% 150%;
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 6px 18px rgba(37, 99, 235, .25);
+    transition: transform .15s ease, box-shadow .15s ease, background-position .3s ease;
+}
+.btn-accent:hover, .btn-accent:focus {
+    color: #fff; background-position: 100% 0;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(37, 99, 235, .35);
+}
+.btn-outline-accent { border-color: var(--cc-accent); color: var(--cc-accent-dark); font-weight: 600; }
+.btn-outline-accent:hover { background: var(--cc-grad-main); border-color: transparent; color: #fff; }
+.btn-warm {
+    background: var(--cc-grad-warm); border: none; color: #fff; font-weight: 600;
+    box-shadow: 0 6px 18px rgba(244, 63, 94, .3);
+}
+.btn-warm:hover { color: #fff; transform: translateY(-1px); box-shadow: 0 10px 24px rgba(244, 63, 94, .4); }
+
+/* ---------- Hero (home page top) ---------- */
+.hero {
+    position: relative;
+    overflow: hidden;
+    background: var(--cc-photo-overlay), var(--cc-img-hero), var(--cc-navy);
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    padding: 6rem 0 7rem;
+}
+/* Soft coloured glows floating behind the text */
+.hero::before, .hero::after {
+    content: ""; position: absolute; border-radius: 50%; filter: blur(70px); opacity: .55; z-index: 0;
+    animation: float 9s ease-in-out infinite;
+}
+.hero::before { width: 380px; height: 380px; background: #2563eb; top: -120px; right: -80px; }
+.hero::after  { width: 300px; height: 300px; background: #f43f5e; bottom: -140px; left: -60px; animation-delay: -4s; }
+.hero > .container { position: relative; z-index: 1; }
+
+.hero h1 { font-size: clamp(2.1rem, 4.8vw, 3.5rem); font-weight: 800; line-height: 1.12; }
+.hero h1 .highlight {
+    background: var(--cc-grad-warm);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.hero p.lead { color: rgba(255,255,255,.8); max-width: 560px; }
+
+.hero-badge {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
+    border-radius: 999px; padding: .35rem .9rem; font-size: .82rem; font-weight: 600;
+    backdrop-filter: blur(6px);
+}
+.hero-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 4px rgba(34,197,94,.25); }
+
+.popular-tags a {
+    display: inline-block; margin: 0 .35rem .4rem 0; padding: .25rem .75rem;
+    border-radius: 999px; font-size: .8rem; color: #fff; text-decoration: none;
+    background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18);
+    transition: background .15s ease;
+}
+.popular-tags a:hover { background: rgba(255,255,255,.25); }
+
+/* Glass cards on the right side of the hero */
+.glass-card {
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 18px;
+    padding: 1.1rem 1.25rem;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 20px 40px rgba(0,0,0,.25);
+    color: #fff;
+}
+.glass-card .mini-logo {
+    width: 40px; height: 40px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 800; background: var(--cc-grad-warm);
+}
+.hero-visual { position: relative; min-height: 340px; }
+.hero-visual .glass-card { position: absolute; width: 290px; }
+.hero-visual .card-1 { top: 0; right: 30px; animation: float 7s ease-in-out infinite; }
+.hero-visual .card-2 { top: 150px; left: 0; animation: float 8s ease-in-out infinite -3s; }
+.hero-visual .card-3 { bottom: 0; right: 0; width: 240px; animation: float 9s ease-in-out infinite -5s; }
+.status-pill { font-size: .72rem; font-weight: 700; padding: .2rem .55rem; border-radius: 999px; }
+.status-pill.green { background: rgba(34,197,94,.25); color: #bbf7d0; }
+.status-pill.amber { background: rgba(244,168,58,.3); color: #fde68a; }
+
+.search-panel {
+    background: #fff;
+    border-radius: 16px;
+    padding: .6rem;
+    box-shadow: 0 25px 50px rgba(6, 15, 35, .4);
+}
+.search-panel .form-control, .search-panel .form-select { border: none; box-shadow: none; }
+.search-panel .divider { border-left: 1px solid var(--cc-border); }
+
+/* ---------- Stat tiles under the hero ---------- */
+.hero-stats { margin-top: -3.5rem; }
+.stat-tile {
+    background: #fff;
+    border: 1px solid var(--cc-border);
+    border-radius: 16px;
+    padding: 1.35rem 1.5rem;
+    height: 100%;
+    box-shadow: var(--cc-shadow-lg);
+    transition: transform .2s ease;
+}
+.stat-tile:hover { transform: translateY(-4px); }
+.stat-tile .value { font-size: 2rem; font-weight: 800; color: var(--cc-navy); line-height: 1.1; }
+.stat-tile .label { color: var(--cc-muted); font-size: .9rem; }
+.stat-tile .icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--cc-grad-main); color: #fff; font-size: 1.4rem;
+    box-shadow: 0 8px 18px rgba(37,99,235,.3);
+}
+.stat-tile .icon.warm { background: var(--cc-grad-warm); box-shadow: 0 8px 18px rgba(244,63,94,.3); }
+.stat-tile .icon.purple { background: var(--cc-grad-purple); box-shadow: 0 8px 18px rgba(124,58,237,.3); }
+
+/* ---------- Trusted-by strip ---------- */
+.logo-strip { color: #9aa5bb; font-weight: 800; font-size: 1.15rem; letter-spacing: .02em; }
+.logo-strip span { opacity: .8; transition: opacity .2s ease, color .2s ease; }
+.logo-strip span:hover { opacity: 1; color: var(--cc-navy); }
+
+/* ---------- Category tiles ---------- */
+.category-tile {
+    display: flex; align-items: center; gap: .9rem;
+    background: #fff; border: 1px solid var(--cc-border); border-radius: 16px;
+    padding: 1.1rem 1.2rem; text-decoration: none; color: var(--cc-navy);
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    height: 100%;
+}
+.category-tile:hover { transform: translateY(-4px); box-shadow: var(--cc-shadow-lg); border-color: transparent; color: var(--cc-navy); }
+.category-tile .cat-icon {
+    width: 50px; height: 50px; flex-shrink: 0; border-radius: 14px;
+    display: inline-flex; align-items: center; justify-content: center; font-size: 1.35rem; color: #fff;
+}
+.category-tile .cat-name { font-weight: 700; }
+.category-tile small { color: var(--cc-muted); }
+.bg-grad-main   { background: var(--cc-grad-main); }
+.bg-grad-warm   { background: var(--cc-grad-warm); }
+.bg-grad-purple { background: var(--cc-grad-purple); }
+.bg-grad-green  { background: linear-gradient(135deg, #22c55e, #0f9d8a); }
+
+/* ---------- Job cards ---------- */
+.job-card {
+    position: relative;
+    background: #fff;
+    border: 1px solid var(--cc-border);
+    border-radius: 16px;
+    padding: 1.25rem 1.4rem;
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    height: 100%;
+    overflow: hidden;
+}
+.job-card::before {               /* gradient line that appears on top when hovered */
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: var(--cc-grad-main); transform: scaleX(0); transform-origin: left; transition: transform .25s ease;
+}
+.job-card:hover { transform: translateY(-4px); box-shadow: var(--cc-shadow-lg); border-color: transparent; }
+.job-card:hover::before { transform: scaleX(1); }
+.job-card .company-logo, .company-logo {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: var(--cc-grad-dark); color: #fff; font-weight: 700; font-size: 1.2rem;
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.job-card .title { font-weight: 700; color: var(--cc-navy); text-decoration: none; }
+.job-card .title:hover { color: var(--cc-accent-dark); }
+.job-meta { color: var(--cc-muted); font-size: .88rem; }
+.job-meta i { margin-right: .25rem; }
+
+.skill-tag {
+    display: inline-block;
+    background: #eef2f8;
+    color: #36425c;
+    border-radius: 999px;
+    padding: .2rem .7rem;
+    font-size: .78rem;
+    font-weight: 500;
+    margin: 0 .3rem .3rem 0;
+}
+.type-badge {
+    background: rgba(15,157,138,.12);
+    color: var(--cc-accent-dark);
+    font-weight: 600;
+    border-radius: 6px;
+    padding: .25rem .55rem;
+    font-size: .75rem;
+}
+
+/* ---------- Generic panels ---------- */
+.panel {
+    background: #fff;
+    border: 1px solid var(--cc-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: var(--cc-shadow-sm);
+}
+/* Dark header band at the top of inner pages (Jobs, Dashboard, About ...) */
+.page-header {
+    position: relative;
+    background: var(--cc-photo-overlay), var(--cc-img-page), var(--cc-navy);
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    padding: 3.5rem 0;
+}
+.page-header::after {              /* thin gradient line at the bottom */
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--cc-grad-main);
+}
+.page-header p { color: rgba(255,255,255,.75); margin-bottom: 0; }
+
+.section-title { font-weight: 800; color: var(--cc-navy); }
+.eyebrow { text-transform: uppercase; letter-spacing: .08em; font-size: .75rem; font-weight: 700; color: var(--cc-accent-dark); }
+
+.job-description { white-space: pre-line; line-height: 1.7; }
+
+/* ---------- Feature boxes ("Why CareerConnect") ---------- */
+.feature-box { display: flex; gap: 1rem; }
+.feature-box .f-icon {
+    width: 46px; height: 46px; flex-shrink: 0; border-radius: 12px;
+    display: inline-flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem;
+}
+.feature-image {
+    border-radius: 22px; min-height: 360px; height: 100%;
+    background: linear-gradient(160deg, rgba(37,99,235,.25), rgba(244,63,94,.25)), var(--cc-img-cta), var(--cc-navy-2);
+    background-size: cover; background-position: center;
+    box-shadow: var(--cc-shadow-lg);
+}
+
+/* ---------- Auth pages (login / register) ---------- */
+.auth-wrap {
+    padding: 4rem 0;
+    background: var(--cc-photo-overlay), var(--cc-img-auth), var(--cc-navy);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+.auth-wrap .section-title { color: #fff; }
+.auth-wrap .auth-intro p { color: rgba(255,255,255,.8) !important; }
+.auth-card { max-width: 480px; margin: 0 auto; }
+.auth-wrap .panel {
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 30px 60px rgba(0,0,0,.35);
+    background: rgba(255,255,255,.96);
+}
+.role-option input { display: none; }
+.role-option label {
+    display: block; border: 2px solid var(--cc-border); border-radius: 12px; padding: .9rem; cursor: pointer;
+    text-align: center; font-weight: 600; color: #36425c; transition: all .15s ease;
+}
+.role-option label:hover { border-color: #b7c3d6; }
+.role-option label i { display: block; font-size: 1.5rem; color: var(--cc-muted); }
+.role-option input:checked + label { border-color: var(--cc-accent); background: rgba(15,157,138,.08); color: var(--cc-navy); }
+.role-option input:checked + label i { color: var(--cc-accent); }
+.form-control:focus { border-color: var(--cc-accent); box-shadow: 0 0 0 .2rem rgba(15,157,138,.18); }
+
+/* ---------- Tables ---------- */
+.table thead th { font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; color: var(--cc-muted); font-weight: 700; }
+.table td { vertical-align: middle; }
+
+/* ---------- Steps ---------- */
+.step-num {
+    width: 46px; height: 46px; border-radius: 50%;
+    background: var(--cc-grad-warm); color: #fff; font-weight: 800; font-size: 1.1rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 18px rgba(244,63,94,.3);
+}
+.panel.step-panel { transition: transform .2s ease, box-shadow .2s ease; }
+.panel.step-panel:hover { transform: translateY(-4px); box-shadow: var(--cc-shadow-lg); }
+
+/* ---------- "Hiring?" band ---------- */
+.cta-band {
+    position: relative; overflow: hidden;
+    background: linear-gradient(120deg, rgba(124,58,237,.92), rgba(37,99,235,.88)), var(--cc-img-cta), var(--cc-navy-2);
+    background-size: cover; background-position: center;
+    color: #fff; border-radius: 22px; padding: 3rem;
+    box-shadow: 0 25px 50px rgba(37,99,235,.3);
+}
+.cta-band p { color: rgba(255,255,255,.85); }
+
+/* ---------- Footer ---------- */
+.site-footer {
+    position: relative;
+    background: var(--cc-grad-dark);
+    color: rgba(255,255,255,.65); padding: 3rem 0 1.5rem; margin-top: 4rem;
+}
+.site-footer::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--cc-grad-main); }
+.site-footer a { color: rgba(255,255,255,.8); text-decoration: none; }
+.site-footer a:hover { color: #fff; }
+.site-footer .brand { color: #fff; font-weight: 800; font-size: 1.2rem; }
+.site-footer .brand span { color: var(--cc-accent); }
+
+.pagination .page-link { color: var(--cc-navy); }
+.pagination .page-item.active .page-link { background: var(--cc-accent); border-color: var(--cc-accent); color: #fff; }
+
+.empty-state { text-align: center; padding: 3rem 1rem; color: var(--cc-muted); }
+.empty-state i { font-size: 2.6rem; display: block; margin-bottom: .6rem; color: #b5bfd1; }
+
+/* Back-to-top round button */
+#backToTop {
+    position: fixed; right: 1.25rem; bottom: 1.25rem; width: 46px; height: 46px; border-radius: 50%;
+    border: none; color: #fff; background: var(--cc-grad-main); box-shadow: var(--cc-shadow-lg);
+    opacity: 0; pointer-events: none; transition: opacity .25s ease; z-index: 1030;
+}
+#backToTop.show { opacity: 1; pointer-events: auto; }
+
+/* ---------- 4. Animations ---------- */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-14px); }
+}
+/* Elements with class "reveal" fade in when you scroll to them (see js/main.js) */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+/* Respect users who turned off animations in their computer settings */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1; transform: none; }
+}
+
+/* Small screens: hide the floating cards, reduce padding */
+@media (max-width: 991.98px) {
+    .hero { padding: 4rem 0 6rem; }
+    .cta-band { padding: 2rem; }
+    .auth-wrap { background-attachment: scroll; }
+}

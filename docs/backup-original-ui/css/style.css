@@ -1,0 +1,182 @@
+/* CareerConnect - custom styles on top of Bootstrap 5 */
+:root {
+    --cc-navy: #0f1b33;
+    --cc-navy-2: #18284a;
+    --cc-accent: #0f9d8a;
+    --cc-accent-dark: #0b7d6e;
+    --cc-amber: #f4a83a;
+    --cc-bg: #f5f7fb;
+    --cc-border: #e3e8f0;
+    --cc-muted: #6b7690;
+    --bs-body-font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --bs-primary: #0f9d8a;
+    --bs-primary-rgb: 15, 157, 138;
+    --bs-link-color: #0b7d6e;
+    --bs-link-hover-color: #075c51;
+}
+
+body {
+    background: var(--cc-bg);
+    color: #1d2638;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main { flex: 1 0 auto; }
+
+h1, h2, h3, h4, h5 { font-weight: 700; letter-spacing: -0.01em; }
+
+/* ---------- Navbar ---------- */
+.site-nav { background: var(--cc-navy); }
+.site-nav .navbar-brand { font-weight: 800; font-size: 1.35rem; }
+.site-nav .navbar-brand span { color: var(--cc-accent); }
+.site-nav .navbar-brand i { color: var(--cc-amber); }
+.site-nav .nav-link { color: rgba(255,255,255,.78); font-weight: 500; }
+.site-nav .nav-link:hover, .site-nav .nav-link.active { color: #fff; }
+
+/* ---------- Buttons ---------- */
+.btn-accent {
+    background: var(--cc-accent);
+    border-color: var(--cc-accent);
+    color: #fff;
+    font-weight: 600;
+}
+.btn-accent:hover, .btn-accent:focus { background: var(--cc-accent-dark); border-color: var(--cc-accent-dark); color: #fff; }
+.btn-outline-accent { border-color: var(--cc-accent); color: var(--cc-accent-dark); font-weight: 600; }
+.btn-outline-accent:hover { background: var(--cc-accent); color: #fff; }
+
+/* ---------- Hero ---------- */
+.hero {
+    background:
+        radial-gradient(circle at 85% 20%, rgba(15,157,138,.35), transparent 45%),
+        radial-gradient(circle at 10% 90%, rgba(244,168,58,.18), transparent 40%),
+        var(--cc-navy);
+    color: #fff;
+    padding: 5rem 0 6rem;
+}
+.hero h1 { font-size: clamp(2rem, 4.5vw, 3.2rem); font-weight: 800; line-height: 1.15; }
+.hero h1 .highlight { color: var(--cc-amber); }
+.hero p.lead { color: rgba(255,255,255,.75); max-width: 560px; }
+
+.search-panel {
+    background: #fff;
+    border-radius: 14px;
+    padding: .6rem;
+    box-shadow: 0 18px 40px rgba(6, 15, 35, .35);
+}
+.search-panel .form-control, .search-panel .form-select { border: none; box-shadow: none; }
+.search-panel .divider { border-left: 1px solid var(--cc-border); }
+
+.hero-stats { margin-top: -3rem; }
+.stat-tile {
+    background: #fff;
+    border: 1px solid var(--cc-border);
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    height: 100%;
+}
+.stat-tile .value { font-size: 1.9rem; font-weight: 800; color: var(--cc-navy); line-height: 1.1; }
+.stat-tile .label { color: var(--cc-muted); font-size: .9rem; }
+.stat-tile .icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(15,157,138,.12); color: var(--cc-accent-dark); font-size: 1.3rem;
+}
+
+/* ---------- Job cards ---------- */
+.job-card {
+    background: #fff;
+    border: 1px solid var(--cc-border);
+    border-radius: 14px;
+    padding: 1.25rem 1.4rem;
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    height: 100%;
+}
+.job-card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(15,27,51,.08); border-color: #cfd8e6; }
+.job-card .company-logo, .company-logo {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: var(--cc-navy-2); color: #fff; font-weight: 700; font-size: 1.2rem;
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.job-card .title { font-weight: 700; color: var(--cc-navy); text-decoration: none; }
+.job-card .title:hover { color: var(--cc-accent-dark); }
+.job-meta { color: var(--cc-muted); font-size: .88rem; }
+.job-meta i { margin-right: .25rem; }
+
+.skill-tag {
+    display: inline-block;
+    background: #eef2f8;
+    color: #36425c;
+    border-radius: 999px;
+    padding: .2rem .7rem;
+    font-size: .78rem;
+    font-weight: 500;
+    margin: 0 .3rem .3rem 0;
+}
+.type-badge {
+    background: rgba(15,157,138,.12);
+    color: var(--cc-accent-dark);
+    font-weight: 600;
+    border-radius: 6px;
+    padding: .25rem .55rem;
+    font-size: .75rem;
+}
+
+/* ---------- Generic panels ---------- */
+.panel {
+    background: #fff;
+    border: 1px solid var(--cc-border);
+    border-radius: 14px;
+    padding: 1.5rem;
+}
+.page-header {
+    background: var(--cc-navy);
+    color: #fff;
+    padding: 2.5rem 0;
+}
+.page-header p { color: rgba(255,255,255,.7); margin-bottom: 0; }
+
+.section-title { font-weight: 800; color: var(--cc-navy); }
+.eyebrow { text-transform: uppercase; letter-spacing: .08em; font-size: .75rem; font-weight: 700; color: var(--cc-accent-dark); }
+
+.job-description { white-space: pre-line; line-height: 1.7; }
+
+/* ---------- Auth ---------- */
+.auth-wrap { padding: 4rem 0; }
+.auth-card { max-width: 480px; margin: 0 auto; }
+.role-option input { display: none; }
+.role-option label {
+    display: block; border: 2px solid var(--cc-border); border-radius: 12px; padding: .9rem; cursor: pointer;
+    text-align: center; font-weight: 600; color: #36425c;
+}
+.role-option label i { display: block; font-size: 1.5rem; color: var(--cc-muted); }
+.role-option input:checked + label { border-color: var(--cc-accent); background: rgba(15,157,138,.06); color: var(--cc-navy); }
+.role-option input:checked + label i { color: var(--cc-accent); }
+
+/* ---------- Tables ---------- */
+.table thead th { font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; color: var(--cc-muted); font-weight: 700; }
+.table td { vertical-align: middle; }
+
+/* ---------- Steps ---------- */
+.step-num {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--cc-amber); color: var(--cc-navy); font-weight: 800;
+    display: inline-flex; align-items: center; justify-content: center;
+}
+
+.cta-band { background: var(--cc-navy-2); color: #fff; border-radius: 18px; padding: 2.5rem; }
+.cta-band p { color: rgba(255,255,255,.72); }
+
+/* ---------- Footer ---------- */
+.site-footer { background: var(--cc-navy); color: rgba(255,255,255,.65); padding: 2.5rem 0 1.5rem; margin-top: 4rem; }
+.site-footer a { color: rgba(255,255,255,.8); text-decoration: none; }
+.site-footer a:hover { color: #fff; }
+.site-footer .brand { color: #fff; font-weight: 800; font-size: 1.2rem; }
+.site-footer .brand span { color: var(--cc-accent); }
+
+.pagination .page-link { color: var(--cc-navy); }
+.pagination .page-item.active .page-link { background: var(--cc-accent); border-color: var(--cc-accent); color: #fff; }
+
+.empty-state { text-align: center; padding: 3rem 1rem; color: var(--cc-muted); }
+.empty-state i { font-size: 2.6rem; display: block; margin-bottom: .6rem; color: #b5bfd1; }

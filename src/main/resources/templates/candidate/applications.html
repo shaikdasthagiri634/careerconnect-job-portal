@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('My applications')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main>
+    <section class="page-header">
+        <div class="container d-md-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h2 mb-1">My applications</h1>
+                <p>Hi <span th:text="${currentUser.fullName}">there</span>, here is where every application stands.</p>
+            </div>
+            <a th:href="@{/jobs}" class="btn btn-warning fw-semibold mt-3 mt-md-0"><i class="bi bi-search me-1"></i>Find more jobs</a>
+        </div>
+    </section>
+
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <div class="container mt-4">
+        <div class="panel p-0">
+            <div class="table-responsive" th:if="${!applications.isEmpty()}">
+                <table class="table table-hover mb-0">
+                    <thead>
+                    <tr>
+                        <th class="ps-3">Job</th>
+                        <th>Company</th>
+                        <th>Applied on</th>
+                        <th>Status</th>
+                        <th class="text-end pe-3"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="app : ${applications}">
+                        <td class="ps-3">
+                            <a class="fw-semibold text-decoration-none" th:href="@{/jobs/{id}(id=${app.job.id})}" th:text="${app.job.title}">Title</a>
+                            <div class="small text-body-secondary" th:text="${app.job.location}">City</div>
+                        </td>
+                        <td th:text="${app.job.companyName}">Company</td>
+                        <td class="small" th:text="${#temporals.format(app.appliedAt, 'dd MMM yyyy')}">date</td>
+                        <td><span class="badge" th:classappend="'text-bg-' + ${app.status.badge}" th:text="${app.status.label}">Applied</span></td>
+                        <td class="text-end pe-3">
+                            <form th:action="@{/candidate/applications/{id}/withdraw(id=${app.id})}" method="post"
+                                  onsubmit="return confirm('Withdraw this application?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Withdraw</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="empty-state" th:if="${applications.isEmpty()}">
+                <i class="bi bi-send"></i>
+                <p class="mb-2">You haven't applied to any jobs yet.</p>
+                <a th:href="@{/jobs}" class="btn btn-accent btn-sm">Browse jobs</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

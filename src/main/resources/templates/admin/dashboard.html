@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Admin panel')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main>
+    <section class="page-header">
+        <div class="container">
+            <h1 class="h2 mb-1">Admin panel</h1>
+            <p>Platform overview, user management and job moderation.</p>
+        </div>
+    </section>
+
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <div class="container mt-4">
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-lg-3">
+                <div class="stat-tile"><div class="value" th:text="${totalUsers}">0</div>
+                    <div class="label"><span th:text="${employers}">0</span> employers &middot; <span th:text="${candidates}">0</span> candidates</div></div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="stat-tile"><div class="value" th:text="${totalJobs}">0</div>
+                    <div class="label">Jobs (<span th:text="${activeJobs}">0</span> open)</div></div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="stat-tile">
+                    <div class="value" th:text="${totalApplications}">0</div>
+                    <div class="label mb-2">Applications</div>
+                    <span th:each="entry : ${statusCounts}" class="badge me-1"
+                          th:classappend="'text-bg-' + ${entry.key.badge}"
+                          th:text="${entry.key.label} + ': ' + ${entry.value}">Applied: 0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel p-0 mb-4">
+            <div class="p-3 border-bottom"><h2 class="h5 mb-0">Users</h2></div>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                    <tr><th class="ps-3">Name</th><th>Email</th><th>Role</th><th>Joined</th><th>Status</th><th class="text-end pe-3"></th></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="u : ${users}">
+                        <td class="ps-3 fw-semibold" th:text="${u.fullName}">Name</td>
+                        <td class="small" th:text="${u.email}">email</td>
+                        <td><span class="badge text-bg-light border" th:text="${u.role.label}">Role</span></td>
+                        <td class="small" th:text="${#temporals.format(u.createdAt, 'dd MMM yyyy')}">date</td>
+                        <td>
+                            <span th:if="${u.enabled}" class="badge text-bg-success">Active</span>
+                            <span th:unless="${u.enabled}" class="badge text-bg-danger">Blocked</span>
+                        </td>
+                        <td class="text-end pe-3">
+                            <form th:if="${u.id != currentUser.id}" th:action="@{/admin/users/{id}/toggle(id=${u.id})}" method="post">
+                                <button type="submit" class="btn btn-sm"
+                                        th:classappend="${u.enabled} ? 'btn-outline-danger' : 'btn-outline-success'"
+                                        th:text="${u.enabled} ? 'Block' : 'Unblock'">Block</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel p-0">
+            <div class="p-3 border-bottom"><h2 class="h5 mb-0">Recent jobs</h2></div>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                    <tr><th class="ps-3">Job</th><th>Company</th><th>Posted by</th><th>Posted</th><th>Status</th><th class="text-end pe-3"></th></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="job : ${recentJobs}">
+                        <td class="ps-3"><a class="fw-semibold text-decoration-none" th:href="@{/jobs/{id}(id=${job.id})}" th:text="${job.title}">Title</a></td>
+                        <td th:text="${job.companyName}">Company</td>
+                        <td class="small" th:text="${job.employer.email}">email</td>
+                        <td class="small" th:text="${#temporals.format(job.postedAt, 'dd MMM yyyy')}">date</td>
+                        <td>
+                            <span th:if="${job.active}" class="badge text-bg-success">Open</span>
+                            <span th:unless="${job.active}" class="badge text-bg-secondary">Closed</span>
+                        </td>
+                        <td class="text-end pe-3">
+                            <form th:action="@{/admin/jobs/{id}/delete(id=${job.id})}" method="post"
+                                  onsubmit="return confirm('Delete this job and all its applications?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

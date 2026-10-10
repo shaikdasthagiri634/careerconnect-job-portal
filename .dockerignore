@@ -1,0 +1,9 @@
+target/
+.settings/
+settings-old/
+.classpath
+.project
+.git/
+docs/
+postman/
+*.log

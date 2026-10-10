@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${jobId == null ? 'Post a job' : 'Edit job'})}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main>
+    <section class="page-header">
+        <div class="container">
+            <a th:href="@{/employer/dashboard}" class="text-white-50 small text-decoration-none"><i class="bi bi-arrow-left"></i> Dashboard</a>
+            <h1 class="h2 mt-2 mb-1" th:text="${jobId == null} ? 'Post a new job' : 'Edit job'">Post a new job</h1>
+            <p>Clear, specific postings get better applicants.</p>
+        </div>
+    </section>
+
+    <div class="container mt-4">
+        <form th:action="${jobId == null} ? @{/employer/jobs} : @{/employer/jobs/{id}(id=${jobId})}"
+              th:object="${jobForm}" method="post" class="panel" novalidate>
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <label for="title" class="form-label fw-semibold">Job title *</label>
+                    <input id="title" type="text" th:field="*{title}" class="form-control" placeholder="e.g. Java Backend Developer"
+                           th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{title}">Error</div>
+                </div>
+                <div class="col-md-4">
+                    <label for="jobType" class="form-label fw-semibold">Job type *</label>
+                    <select id="jobType" th:field="*{jobType}" class="form-select"
+                            th:classappend="${#fields.hasErrors('jobType')} ? 'is-invalid'">
+                        <option value="">Select...</option>
+                        <option th:each="t : ${jobTypes}" th:value="${t}" th:text="${t.label}">Full-time</option>
+                    </select>
+                    <div class="invalid-feedback" th:errors="*{jobType}">Error</div>
+                </div>
+                <div class="col-md-6">
+                    <label for="companyName" class="form-label fw-semibold">Company *</label>
+                    <input id="companyName" type="text" th:field="*{companyName}" class="form-control"
+                           th:classappend="${#fields.hasErrors('companyName')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{companyName}">Error</div>
+                </div>
+                <div class="col-md-6">
+                    <label for="location" class="form-label fw-semibold">Location *</label>
+                    <input id="location" type="text" th:field="*{location}" class="form-control" placeholder="e.g. Hyderabad or Remote"
+                           th:classappend="${#fields.hasErrors('location')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{location}">Error</div>
+                </div>
+                <div class="col-md-6">
+                    <label for="salary" class="form-label fw-semibold">Salary</label>
+                    <input id="salary" type="text" th:field="*{salary}" class="form-control" placeholder="e.g. 6 - 10 LPA"
+                           th:classappend="${#fields.hasErrors('salary')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{salary}">Error</div>
+                </div>
+                <div class="col-md-6">
+                    <label for="experience" class="form-label fw-semibold">Experience</label>
+                    <input id="experience" type="text" th:field="*{experience}" class="form-control" placeholder="e.g. 2 - 4 years"
+                           th:classappend="${#fields.hasErrors('experience')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{experience}">Error</div>
+                </div>
+                <div class="col-12">
+                    <label for="skills" class="form-label fw-semibold">Skills</label>
+                    <input id="skills" type="text" th:field="*{skills}" class="form-control" placeholder="Comma separated, e.g. Java, Spring Boot, SQL"
+                           th:classappend="${#fields.hasErrors('skills')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{skills}">Error</div>
+                </div>
+                <div class="col-12">
+                    <label for="description" class="form-label fw-semibold">Description *</label>
+                    <textarea id="description" th:field="*{description}" rows="8" maxlength="4000" class="form-control"
+                              placeholder="Responsibilities, requirements, benefits..."
+                              th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'"></textarea>
+                    <div class="invalid-feedback" th:errors="*{description}">Error</div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end gap-2 mt-4">
+                <a th:href="@{/employer/dashboard}" class="btn btn-light border">Cancel</a>
+                <button type="submit" class="btn btn-accent px-4" th:text="${jobId == null} ? 'Publish job' : 'Save changes'">Publish job</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

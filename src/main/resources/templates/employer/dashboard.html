@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Employer dashboard')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main>
+    <section class="page-header">
+        <div class="container d-md-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h2 mb-1">Employer dashboard</h1>
+                <p>Welcome, <span th:text="${currentUser.fullName}">Employer</span>. Manage your postings and applicants.</p>
+            </div>
+            <a th:href="@{/employer/jobs/new}" class="btn btn-warning fw-semibold mt-3 mt-md-0"><i class="bi bi-plus-lg me-1"></i>Post a job</a>
+        </div>
+    </section>
+
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <div class="container mt-4">
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="stat-tile d-flex gap-3 align-items-center">
+                    <span class="icon"><i class="bi bi-briefcase"></i></span>
+                    <div><div class="value" th:text="${totalJobs}">0</div><div class="label">Jobs posted</div></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-tile d-flex gap-3 align-items-center">
+                    <span class="icon"><i class="bi bi-door-open"></i></span>
+                    <div><div class="value" th:text="${openJobs}">0</div><div class="label">Open for applications</div></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-tile d-flex gap-3 align-items-center">
+                    <span class="icon"><i class="bi bi-people"></i></span>
+                    <div><div class="value" th:text="${totalApplicants}">0</div><div class="label">Total applicants</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel p-0">
+            <div class="p-3 border-bottom"><h2 class="h5 mb-0">Your job postings</h2></div>
+            <div class="table-responsive" th:if="${!myJobs.isEmpty()}">
+                <table class="table table-hover mb-0">
+                    <thead>
+                    <tr>
+                        <th class="ps-3">Job</th>
+                        <th>Type</th>
+                        <th>Posted</th>
+                        <th>Applicants</th>
+                        <th>Status</th>
+                        <th class="text-end pe-3">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="job : ${myJobs}">
+                        <td class="ps-3">
+                            <a class="fw-semibold text-decoration-none" th:href="@{/jobs/{id}(id=${job.id})}" th:text="${job.title}">Title</a>
+                            <div class="small text-body-secondary" th:text="${job.location}">City</div>
+                        </td>
+                        <td><span class="type-badge" th:text="${job.jobType.label}">Full-time</span></td>
+                        <td class="small" th:text="${#temporals.format(job.postedAt, 'dd MMM yyyy')}">date</td>
+                        <td>
+                            <a th:href="@{/employer/jobs/{id}/applicants(id=${job.id})}" class="text-decoration-none">
+                                <span class="badge rounded-pill text-bg-dark" th:text="${applicantCounts.get(job.id)}">0</span> view
+                            </a>
+                        </td>
+                        <td>
+                            <span th:if="${job.active}" class="badge text-bg-success">Open</span>
+                            <span th:unless="${job.active}" class="badge text-bg-secondary">Closed</span>
+                        </td>
+                        <td class="text-end pe-3 text-nowrap">
+                            <a th:href="@{/employer/jobs/{id}/edit(id=${job.id})}" class="btn btn-sm btn-light border" title="Edit">
+                                <i class="bi bi-pencil"></i></a>
+                            <form th:action="@{/employer/jobs/{id}/toggle(id=${job.id})}" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-light border"
+                                        th:title="${job.active} ? 'Close applications' : 'Reopen applications'">
+                                    <i class="bi" th:classappend="${job.active} ? 'bi-lock' : 'bi-unlock'"></i>
+                                </button>
+                            </form>
+                            <form th:action="@{/employer/jobs/{id}/delete(id=${job.id})}" method="post" class="d-inline"
+                                  onsubmit="return confirm('Delete this job and all its applications?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="empty-state" th:if="${myJobs.isEmpty()}">
+                <i class="bi bi-clipboard-plus"></i>
+                <p class="mb-2">You haven't posted any jobs yet.</p>
+                <a th:href="@{/employer/jobs/new}" class="btn btn-accent btn-sm">Post your first job</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

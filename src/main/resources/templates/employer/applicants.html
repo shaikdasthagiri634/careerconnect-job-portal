@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Applicants')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main>
+    <section class="page-header">
+        <div class="container">
+            <a th:href="@{/employer/dashboard}" class="text-white-50 small text-decoration-none"><i class="bi bi-arrow-left"></i> Dashboard</a>
+            <h1 class="h2 mt-2 mb-1">Applicants</h1>
+            <p><span th:text="${job.title}">Job</span> &middot; <span th:text="${applications.size()}">0</span> applicant(s)</p>
+        </div>
+    </section>
+
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <div class="container mt-4">
+        <div class="panel empty-state" th:if="${applications.isEmpty()}">
+            <i class="bi bi-hourglass-split"></i>No applications yet. They will appear here as candidates apply.
+        </div>
+
+        <div class="row g-3">
+            <div class="col-lg-6" th:each="app : ${applications}">
+                <div class="panel h-100 d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="d-flex gap-3">
+                            <div class="company-logo" th:text="${#strings.substring(app.candidate.fullName, 0, 1)}">A</div>
+                            <div>
+                                <h2 class="h5 mb-0" th:text="${app.candidate.fullName}">Name</h2>
+                                <div class="small text-body-secondary" th:text="${app.candidate.headline}">Headline</div>
+                            </div>
+                        </div>
+                        <span class="badge" th:classappend="'text-bg-' + ${app.status.badge}" th:text="${app.status.label}">Applied</span>
+                    </div>
+                    <div class="small mt-3">
+                        <div><i class="bi bi-envelope me-2"></i><a th:href="'mailto:' + ${app.candidate.email}" th:text="${app.candidate.email}">email</a></div>
+                        <div th:if="${app.candidate.phone}"><i class="bi bi-telephone me-2"></i><span th:text="${app.candidate.phone}">phone</span></div>
+                        <div class="text-body-secondary"><i class="bi bi-clock me-2"></i>Applied
+                            <span th:text="${#temporals.format(app.appliedAt, 'dd MMM yyyy, HH:mm')}">date</span></div>
+                    </div>
+                    <div class="mt-3 p-3 bg-light rounded small job-description" th:if="${app.coverLetter}" th:text="${app.coverLetter}">Cover letter</div>
+                    <form th:action="@{/employer/applications/{id}/status(id=${app.id})}" method="post"
+                          class="d-flex gap-2 mt-auto pt-3">
+                        <select name="status" class="form-select form-select-sm" aria-label="Application status">
+                            <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}" th:selected="${s == app.status}">Status</option>
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-accent text-nowrap">Update status</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

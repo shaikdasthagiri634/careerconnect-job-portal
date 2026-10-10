@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Browse jobs')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main>
+    <section class="page-header">
+        <div class="container">
+            <h1 class="h2 mb-1">Browse jobs</h1>
+            <p th:text="${jobs.totalElements} + ' open position' + (${jobs.totalElements} == 1 ? '' : 's') + ' found'">0 found</p>
+        </div>
+    </section>
+
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <div class="container mt-4">
+        <form th:action="@{/jobs}" method="get" class="panel mb-4">
+            <div class="row g-2 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label small fw-semibold" for="keyword">Keyword</label>
+                    <input id="keyword" type="text" name="keyword" class="form-control" th:value="${keyword}"
+                           placeholder="Title, skill or company">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-semibold" for="location">Location</label>
+                    <input id="location" type="text" name="location" class="form-control" th:value="${location}"
+                           placeholder="City or Remote">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-semibold" for="type">Job type</label>
+                    <select id="type" name="type" class="form-select">
+                        <option value="">Any type</option>
+                        <option th:each="t : ${jobTypes}" th:value="${t}" th:text="${t.label}"
+                                th:selected="${t == type}">Full-time</option>
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex gap-2">
+                    <button class="btn btn-accent flex-grow-1" type="submit"><i class="bi bi-search"></i> Search</button>
+                    <a class="btn btn-light border" th:href="@{/jobs}" title="Clear filters"><i class="bi bi-x-lg"></i></a>
+                </div>
+            </div>
+        </form>
+
+        <div class="row g-3" th:if="${jobs.hasContent()}">
+            <div class="col-md-6" th:each="job : ${jobs.content}">
+                <div th:replace="~{fragments/layout :: jobCard(${job})}"></div>
+            </div>
+        </div>
+
+        <div class="panel empty-state" th:unless="${jobs.hasContent()}">
+            <i class="bi bi-search"></i>
+            <p class="mb-2">No jobs match your search.</p>
+            <a th:href="@{/jobs}" class="btn btn-outline-accent btn-sm">Clear filters</a>
+        </div>
+
+        <nav class="mt-4" th:if="${jobs.totalPages > 1}" aria-label="Job results pages">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${jobs.first} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/jobs(keyword=${keyword}, location=${location}, type=${type}, page=${jobs.number - 1})}">Previous</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, jobs.totalPages - 1)}"
+                    th:classappend="${i == jobs.number} ? 'active'">
+                    <a class="page-link"
+                       th:href="@{/jobs(keyword=${keyword}, location=${location}, type=${type}, page=${i})}"
+                       th:text="${i + 1}">1</a>
+                </li>
+                <li class="page-item" th:classappend="${jobs.last} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/jobs(keyword=${keyword}, location=${location}, type=${type}, page=${jobs.number + 1})}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

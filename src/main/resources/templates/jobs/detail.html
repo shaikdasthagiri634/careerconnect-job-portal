@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head(${job.title})}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main>
+    <section class="page-header">
+        <div class="container">
+            <a th:href="@{/jobs}" class="text-white-50 small text-decoration-none"><i class="bi bi-arrow-left"></i> Back to jobs</a>
+            <div class="d-flex gap-3 align-items-center mt-3">
+                <div class="company-logo" th:text="${#strings.substring(job.companyName, 0, 1)}">T</div>
+                <div>
+                    <h1 class="h2 mb-1" th:text="${job.title}">Job title</h1>
+                    <p class="fs-5" th:text="${job.companyName}">Company</p>
+                </div>
+            </div>
+            <div class="d-flex flex-wrap gap-3 mt-3 text-white-50">
+                <span><i class="bi bi-geo-alt me-1"></i><span th:text="${job.location}">City</span></span>
+                <span><i class="bi bi-briefcase me-1"></i><span th:text="${job.jobType.label}">Full-time</span></span>
+                <span th:if="${job.salary}"><i class="bi bi-cash-stack me-1"></i><span th:text="${job.salary}">Salary</span></span>
+                <span th:if="${job.experience}"><i class="bi bi-bar-chart me-1"></i><span th:text="${job.experience}">Exp</span></span>
+                <span><i class="bi bi-clock me-1"></i>Posted <span th:text="${#temporals.format(job.postedAt, 'dd MMM yyyy')}">date</span></span>
+            </div>
+        </div>
+    </section>
+
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <div class="container mt-4">
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="panel">
+                    <div th:unless="${job.active}" class="alert alert-warning">
+                        <i class="bi bi-lock me-1"></i>This position is closed and no longer accepting applications.
+                    </div>
+                    <h2 class="h5 section-title">About the role</h2>
+                    <p class="job-description" th:text="${job.description}">Description</p>
+
+                    <div th:if="${job.skillList.length > 0}">
+                        <h2 class="h5 section-title mt-4">Skills required</h2>
+                        <span class="skill-tag" th:each="skill : ${job.skillList}" th:text="${skill}">Java</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="panel">
+                    <!-- Not logged in -->
+                    <div sec:authorize="isAnonymous()">
+                        <h2 class="h5">Interested in this job?</h2>
+                        <p class="text-body-secondary small">Log in as a job seeker to apply.</p>
+                        <a th:href="@{/login}" class="btn btn-accent w-100 mb-2">Log in to apply</a>
+                        <a th:href="@{/register}" class="btn btn-outline-accent w-100">Create an account</a>
+                    </div>
+
+                    <!-- Candidate -->
+                    <div sec:authorize="hasRole('CANDIDATE')">
+                        <div th:if="${alreadyApplied}" class="text-center">
+                            <i class="bi bi-patch-check-fill text-success fs-1"></i>
+                            <h2 class="h5 mt-2">You have applied</h2>
+                            <p class="text-body-secondary small">Track the status from your applications page.</p>
+                            <a th:href="@{/candidate/applications}" class="btn btn-outline-accent w-100">My applications</a>
+                        </div>
+                        <form th:if="${!alreadyApplied and job.active}" th:action="@{/jobs/{id}/apply(id=${job.id})}" method="post">
+                            <h2 class="h5">Apply for this job</h2>
+                            <label for="coverLetter" class="form-label small fw-semibold">Cover letter (optional)</label>
+                            <textarea id="coverLetter" name="coverLetter" rows="6" maxlength="2000" class="form-control mb-3"
+                                      placeholder="Tell the employer why you are a good fit..."></textarea>
+                            <button type="submit" class="btn btn-accent w-100"><i class="bi bi-send me-1"></i>Submit application</button>
+                        </form>
+                        <p th:if="${!alreadyApplied and !job.active}" class="text-body-secondary mb-0">Applications are closed.</p>
+                    </div>
+
+                    <!-- Employer -->
+                    <div sec:authorize="hasRole('EMPLOYER')">
+                        <div th:if="${currentUser != null and currentUser.id == job.employer.id}">
+                            <h2 class="h5">Your job posting</h2>
+                            <a th:href="@{/employer/jobs/{id}/applicants(id=${job.id})}" class="btn btn-accent w-100 mb-2">View applicants</a>
+                            <a th:href="@{/employer/jobs/{id}/edit(id=${job.id})}" class="btn btn-outline-accent w-100">Edit job</a>
+                        </div>
+                        <p th:unless="${currentUser != null and currentUser.id == job.employer.id}" class="text-body-secondary mb-0">
+                            Log in with a job seeker account to apply.
+                        </p>
+                    </div>
+
+                    <!-- Admin -->
+                    <div sec:authorize="hasRole('ADMIN')">
+                        <h2 class="h5">Admin</h2>
+                        <form th:action="@{/admin/jobs/{id}/delete(id=${job.id})}" method="post"
+                              onsubmit="return confirm('Delete this job and all its applications?');">
+                            <button class="btn btn-outline-danger w-100" type="submit"><i class="bi bi-trash me-1"></i>Remove job</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="panel mt-3">
+                    <h2 class="h6 text-uppercase text-body-secondary">Posted by</h2>
+                    <p class="mb-0 fw-semibold" th:text="${job.employer.fullName}">Recruiter</p>
+                    <p class="mb-0 small text-body-secondary" th:text="${job.companyName}">Company</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('About')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main>
+    <section class="page-header">
+        <div class="container">
+            <h1 class="h2 mb-1">About CareerConnect</h1>
+            <p>A full-stack job portal built with Java and Spring Boot.</p>
+        </div>
+    </section>
+
+    <div class="container mt-4">
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <div class="panel h-100">
+                    <h2 class="h5 section-title">Features</h2>
+                    <ul class="mb-0">
+                        <li>Role-based access for <strong>Admins</strong>, <strong>Employers</strong> and <strong>Job Seekers</strong></li>
+                        <li>Secure sign-up and login with BCrypt password hashing (Spring Security)</li>
+                        <li>Job search by keyword, location and job type with pagination</li>
+                        <li>Employers post, edit, close and delete jobs and move applicants through a hiring pipeline</li>
+                        <li>Candidates apply with a cover letter and track application status</li>
+                        <li>Admin dashboard with platform statistics, user blocking and job moderation</li>
+                        <li>REST API (JSON) with HTTP Basic auth, validation and consistent error responses</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="panel h-100">
+                    <h2 class="h5 section-title">Tech stack</h2>
+                    <div>
+                        <span class="skill-tag">Java 21</span><span class="skill-tag">Spring Boot 3</span>
+                        <span class="skill-tag">Spring MVC</span><span class="skill-tag">Spring Security 6</span>
+                        <span class="skill-tag">Spring Data JPA</span><span class="skill-tag">Hibernate</span>
+                        <span class="skill-tag">SQL Server</span><span class="skill-tag">Thymeleaf</span>
+                        <span class="skill-tag">Bootstrap 5</span><span class="skill-tag">Maven</span>
+                        <span class="skill-tag">REST API</span><span class="skill-tag">Postman</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

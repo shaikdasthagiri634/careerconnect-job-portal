@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Create account')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="auth-wrap">
+    <div class="container">
+        <div class="auth-card">
+            <div class="text-center mb-4 auth-intro">
+                <h1 class="h3 section-title">Create your account</h1>
+                <p class="text-body-secondary mb-0">Join as a job seeker or as an employer.</p>
+            </div>
+
+            <form th:action="@{/register}" th:object="${form}" method="post" class="panel" novalidate>
+                <div class="row g-2 mb-3">
+                    <div class="col-6 role-option">
+                        <input type="radio" id="roleCandidate" th:field="*{role}" value="CANDIDATE">
+                        <label for="roleCandidate"><i class="bi bi-person-badge"></i>I want a job</label>
+                    </div>
+                    <div class="col-6 role-option">
+                        <input type="radio" id="roleEmployer" th:field="*{role}" value="EMPLOYER">
+                        <label for="roleEmployer"><i class="bi bi-buildings"></i>I'm hiring</label>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="fullName" class="form-label fw-semibold">Full name</label>
+                    <input type="text" id="fullName" th:field="*{fullName}" class="form-control"
+                           th:classappend="${#fields.hasErrors('fullName')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{fullName}">Error</div>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label fw-semibold">Email</label>
+                    <input type="email" id="email" th:field="*{email}" class="form-control"
+                           th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{email}">Error</div>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label fw-semibold">Password</label>
+                    <input type="password" id="password" th:field="*{password}" class="form-control"
+                           th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'">
+                    <div class="form-text">At least 6 characters.</div>
+                    <div class="invalid-feedback" th:errors="*{password}">Error</div>
+                </div>
+                <div class="row g-2 mb-3">
+                    <div class="col-sm-5">
+                        <label for="phone" class="form-label fw-semibold">Phone</label>
+                        <input type="text" id="phone" th:field="*{phone}" class="form-control"
+                               th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid'">
+                        <div class="invalid-feedback" th:errors="*{phone}">Error</div>
+                    </div>
+                    <div class="col-sm-7">
+                        <label for="headline" class="form-label fw-semibold">Job title / Company</label>
+                        <input type="text" id="headline" th:field="*{headline}" class="form-control"
+                               placeholder="e.g. Java Developer or Acme Ltd"
+                               th:classappend="${#fields.hasErrors('headline')} ? 'is-invalid'">
+                        <div class="invalid-feedback" th:errors="*{headline}">Error</div>
+                    </div>
+                </div>
+                <div class="text-danger small mb-2" th:if="${#fields.hasErrors('role')}" th:errors="*{role}">Error</div>
+                <button type="submit" class="btn btn-accent w-100">Create account</button>
+                <p class="text-center small mt-3 mb-0">Already registered? <a th:href="@{/login}">Log in</a></p>
+            </form>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
