@@ -24,3 +24,16 @@ Thumbs.db
 
 ### Old Eclipse settings backup ###
 settings-old/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Local application configuration
+application-local.properties
+application-secret.properties
+
+# Private keys and certificates
+*.pem
+*.key
