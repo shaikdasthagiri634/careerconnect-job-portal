@@ -89,9 +89,6 @@ public class DataSeeder implements CommandLineRunner {
                 "I have built several Spring Boot REST APIs backed by SQL Server and would love to join TechCorp."));
         applicationRepository.save(application(react, candidate, ApplicationStatus.APPLIED,
                 "I enjoy frontend work as well and have used React in personal projects."));
-
-        log.info("Demo data ready. Logins: admin@jobportal.com/admin123, employer@techcorp.com/employer123, "
-                + "candidate@gmail.com/candidate123");
     }
 
     private User user(String name, String email, String rawPassword, Role role, String headline) {
